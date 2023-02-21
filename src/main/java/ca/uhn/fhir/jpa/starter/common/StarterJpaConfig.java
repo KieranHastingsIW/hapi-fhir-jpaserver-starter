@@ -44,6 +44,7 @@ import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.starter.ips.IpsConfigCondition;
+import ca.uhn.fhir.jpa.starter.security.MyConsentService;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
@@ -83,6 +84,9 @@ import javax.sql.DataSource;
 import java.util.*;
 
 import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory.ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR;
+
+import ca.uhn.fhir.rest.server.interceptor.consent.ConsentInterceptor;
+
 
 @Configuration
 //allow users to configure custom packages to scan for additional beans
@@ -415,7 +419,8 @@ public class StarterJpaConfig {
 		if (!theIpsOperationProvider.isEmpty()) {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
-
+		//Register Consent Interceptor 
+		fhirServer.registerInterceptor(new ConsentInterceptor(new MyConsentService()));
 		return fhirServer;
 	}
 
