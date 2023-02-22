@@ -77,6 +77,10 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.web.cors.CorsConfiguration;
 
+import ca.uhn.fhir.rest.server.interceptor.consent.ConsentInterceptor;
+import ca.uhn.fhir.jpa.starter.security.MyConsentService;
+
+
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
@@ -302,6 +306,7 @@ public class StarterJpaConfig {
 		}
 
 		fhirServer.registerInterceptor(loggingInterceptor);
+		fhirServer.registerInterceptor(new ConsentInterceptor(new MyConsentService()));
 
 		/*
 		 * If you are hosting this server at a specific DNS name, the server will try to
